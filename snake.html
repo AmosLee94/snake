@@ -1,0 +1,27 @@
+<!doctype html>  
+<html> 
+<body> 
+    <canvas id="can" width="601" height="601" style="background: rgb(42,44,39);margin: auto;position: absolute;left: 0;right: 0;top: 0;bottom: 0;"></canvas>
+</body>
+<script>
+    var snake = [ 2, 1 ], food = 3, direction = 1, long, can = document.getElementById("can"), ctx = can.getContext("2d"),cellSize = 40, widthSize = ~~(can.width/cellSize),heightSize = ~~(can.height/cellSize);
+    function draw(t, c) {
+        ctx.fillStyle = c;  
+        ctx.fillRect(t % widthSize * cellSize + 1, ~~(t / widthSize) * cellSize + 1, cellSize - 1, cellSize - 1);
+    }
+    document.onkeydown = function(e) {
+        direction = snake[1] - snake[0] == (long = [ -1, -widthSize, 1, widthSize ][(e || event).keyCode - 37] || direction) ? direction : long;
+    };
+    (function(){
+        snake.unshift(long = snake[0] + direction);  
+        if (snake.indexOf(long, 1) > 0 && snake.indexOf(long, 1) < snake.length-1 || long < 0 ||long >= widthSize * heightSize || direction == 1 && long % widthSize == 0 || direction == -1 && long % widthSize == widthSize-1)return confirm("GAME OVER") ?location.reload() : false;
+        if (long == food) {  
+            while (snake.indexOf(food = ~~ (Math.random() * widthSize * heightSize)) >= 0);  
+            draw(food, "#f92672");
+        } else
+        draw(snake.pop(), "#272822"); 
+        draw(long, "#66d97f");
+        setTimeout(arguments.callee, 200);
+    })(); 
+</script>
+</html>
